@@ -3,7 +3,6 @@
   stdenv,
   fetchurl,
   unzip,
-  makeWrapper,
   autoPatchelfHook,
   versionCheckHook,
   zlib,
@@ -35,7 +34,6 @@ stdenv.mkDerivation {
 
   nativeBuildInputs = [
     unzip
-    makeWrapper
   ]
   ++ lib.optionals stdenv.hostPlatform.isLinux [ autoPatchelfHook ];
 
@@ -70,25 +68,27 @@ stdenv.mkDerivation {
 
   installPhase = ''
     runHook preInstall
-
-    mkdir -p $out/opt $out/bin
-    cp -r junie-app $out/opt/junie
-
-    # On Linux the launcher resolves paths relative to its own location, so a
-    # plain symlink works. On macOS the jpackage launcher walks the directory
-    # tree from argv[0] and gets confused by the symlink layout — use a wrapper
-    # that execs the real binary so $0 points into $out/opt.
-    ${
-      if stdenv.hostPlatform.isDarwin then
-        ''
-          makeWrapper $out/opt/junie/bin/junie $out/bin/junie
-        ''
-      else
-        ''
-          ln -s $out/opt/junie/bin/junie $out/bin/junie
-        ''
-    }
-
+    mkdir -p $out/bin
+  ''
+  + (
+    if stdenv.hostPlatform.isDarwin then
+      # macOS archive ships a .app bundle plus a trivial `junie` shell
+      # wrapper. The launcher resolves the bundle relative to its own
+      # realpath, so a symlink into $out/Applications works fine.
+      ''
+        mkdir -p $out/Applications
+        cp -R Applications/junie.app $out/Applications/
+        ln -s $out/Applications/junie.app/Contents/MacOS/junie $out/bin/junie
+      ''
+    else
+      # Linux archive is a plain jpackage app-image: junie-app/{bin,lib}.
+      ''
+        mkdir -p $out/opt
+        cp -r junie-app $out/opt/junie
+        ln -s $out/opt/junie/bin/junie $out/bin/junie
+      ''
+  )
+  + ''
     runHook postInstall
   '';
 
