@@ -33,9 +33,23 @@
   outputs =
     inputs:
     let
+      # Override bun with AVX-free baseline binary.
+      # Required for systems with pre-AVX CPUs (e.g., Mac Pro 5,1 Xeon E5620).
+      # The standard bun binary requires AVX, which crashes both the bun2nix
+      # build hook and the qmd runtime wrapper on these systems.
+      bunBaselineOverlay = final: prev: {
+        bun = prev.bun.overrideAttrs (oldAttrs: {
+          src = prev.fetchurl {
+            url = "https://github.com/oven-sh/bun/releases/download/bun-v${oldAttrs.version}/bun-linux-x64-baseline.zip";
+            hash = "sha256-q+NG9jQUVHzfazW3pkmkkMcouT0AYiYVaSORioTA5Zs=";
+          };
+        });
+      };
+
       blueprintOutputs = inputs.blueprint {
         inherit inputs;
         nixpkgs.config.allowUnfree = true;
+        nixpkgs.overlays = [ bunBaselineOverlay ];
       };
 
     in
