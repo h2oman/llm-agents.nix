@@ -328,7 +328,7 @@ Nix packages for AI coding agents and development tools. Automatically updated d
 
 - **Source**: source
 - **License**: MIT / Apache-2.0
-- **Homepage**: https://github.com/openagen/zeroclaw
+- **Homepage**: https://github.com/zeroclaw-labs/zeroclaw
 - **Usage**: `nix run github:numtide/llm-agents.nix#zeroclaw -- --help`
 - **Nix**: [packages/zeroclaw/package.nix](packages/zeroclaw/package.nix)
 
@@ -453,6 +453,16 @@ Nix packages for AI coding agents and development tools. Automatically updated d
 
 ### Usage Analytics
 
+<details>
+<summary><strong>agentsview</strong> - Local-first viewer and analytics for AI coding agent sessions</summary>
+
+- **Source**: source
+- **License**: MIT
+- **Homepage**: https://github.com/wesm/agentsview
+- **Usage**: `nix run github:numtide/llm-agents.nix#agentsview -- --help`
+- **Nix**: [packages/agentsview/package.nix](packages/agentsview/package.nix)
+
+</details>
 <details>
 <summary><strong>ccusage</strong> - Usage analysis tool for Claude Code</summary>
 
@@ -743,11 +753,11 @@ Nix packages for AI coding agents and development tools. Automatically updated d
 
 </details>
 <details>
-<summary><strong>happy-coder</strong> - Happy Coder CLI to connect your local Claude Code to mobile device</summary>
+<summary><strong>happy-coder</strong> - Mobile and Web client for Codex and Claude Code, with realtime voice and encryption</summary>
 
 - **Source**: source
 - **License**: MIT
-- **Homepage**: https://github.com/slopus/happy-cli
+- **Homepage**: https://github.com/slopus/happy
 - **Usage**: `nix run github:numtide/llm-agents.nix#happy-coder -- --help`
 - **Nix**: [packages/happy-coder/package.nix](packages/happy-coder/package.nix)
 
